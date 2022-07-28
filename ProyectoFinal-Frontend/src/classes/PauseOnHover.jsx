@@ -141,7 +141,6 @@ export default class PauseOnHover extends Component {
                   desc={info.service_description}
                   precio={info.price}
                   key={info.author_id}
-
                 />
            }
           ))}

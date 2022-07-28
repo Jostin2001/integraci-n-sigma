@@ -8,7 +8,10 @@ const multer  = require('multer');
 const app = express();
 const mongoose = require('mongoose')
 const services = require("./model/service");
-const path = require('path')
+const path = require('path');
+const requests = require('request');
+const Voucher = require("./model/voucher");
+
 let price='';
 /**----------Ininit Upload----------------------------------------*/
 const storage = multer.diskStorage({
@@ -16,7 +19,7 @@ const storage = multer.diskStorage({
     cb(null, './imgs')
   },
   filename: function (req, file, cb) {
-    //console.log(file);
+    console.log(file);
     cb(null, Date.now()+"--"+file.originalname)
   }
 })
@@ -57,15 +60,15 @@ const createPayment = async (req, res) => {
       purchase_units: [{
           amount: {
               currency_code: 'USD', //https://developer.paypal.com/docs/api/reference/currency-codes/
-              value:value_product
+              value: 80//value_product
           }
       }],
       application_context: {
           brand_name: `Sigma.com`,
           landing_page: 'NO_PREFERENCE', // Default, para mas informacion https://developer.paypal.com/docs/api/orders/v2/#definition-order_application_context
           user_action: 'PAY_NOW', // Accion para que en paypal muestre el monto del pago
-          return_url: `http://localhost:3000/execute-payment`, // Url despues de realizar el pago
-          cancel_url: `http://localhost:3000/cancel-payment` // Url despues de realizar el pago
+          return_url: `http://localhost:9000/execute-payment`, // Url despues de realizar el pago
+          cancel_url: `http://localhost:9000/cancel-payment` // Url despues de realizar el pago
       }
   }
   //https://api-m.sandbox.paypal.com/v2/checkout/orders [POST]
@@ -81,7 +84,7 @@ const createPayment = async (req, res) => {
 
 //* Capturar el dinero  */
 const executePayment = (req, res) => {
-  const token = req.query.token; //<-----------
+  const token = req.query.token; //<----------- 
 
   requests.post(`${PAYPAL_API}/v2/checkout/orders/${token}/capture`, {
       auth,
@@ -93,11 +96,11 @@ const executePayment = (req, res) => {
       }
       else{
 
-        res.redirect('http://127.0.0.1:5500/ProyectoFinal-Frontend/interfaces/servicios-shop.html')
+        res.redirect('http://localhost:3000/homepage');
         const vaucherData = {
           buyer_name: 'Octavio Hernandez',
           seller_name: 'Jostin Gamboa',
-          price: '12.50',
+          price: '80.50',
           service_name:'Jardineria',
           date_shop: Date.now(),
           id_service: '12345',
@@ -152,12 +155,8 @@ app.get('/create-payment/:product_price',(req, res)=> {
  })
 
 
-
-
-
-
 app.put("/img/:id",upload.single('inpFile'),(req, res)=> {
-  const id = mongoose.Types.ObjectId(req.params.id);
+  const id = mongoose.Types.ObjectId(req.params.id.trim());
   console.log(req.file);
   services.updateOne(
     {_id: id},

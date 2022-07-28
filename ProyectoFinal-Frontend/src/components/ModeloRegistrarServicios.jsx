@@ -61,7 +61,7 @@ function ModeloRegistrarServicios() {
       const inpFile = document.getElementById("photo").files[0];
       const formData = new FormData();
       formData.append("inpFile", inpFile);
-      var serciceId;
+      let serciceId;
 
       const services = {
         service_name,
@@ -78,23 +78,20 @@ function ModeloRegistrarServicios() {
         .post("http://localhost:9000/services", services)
         .then((res) => {
           const { data } = res;
-          console.log("datos", data)
+          console.log("datos", data);
           serciceId = data.data._id;
-          /*alert(localStorage.getItem('user_name'));
-              alert(localStorage.getItem('id_user'));
-              alert(document.getElementById('option').value)*/
         })
         .catch((error) => {
           console.error(error);
           alert("Hubo un Error EL POST");
         });
-
-//subir imagen
+//"http://localhost:9000/img/62db6ea74c615eb4daee4dd7"
+//subir imagen  62db6ea74c615eb4daee4dd7
        axios
-        .put("http://localhost:9000/img/" + serciceId, formData)
+        .put(`http://localhost:9000/img/${serciceId}`,{formData})
         .then((res) => {
-          const { data } = res;
-          console.log(inpFile);
+          const{imgData} = res;
+          console.log(imgData);
           navigate(`/homepage`);
           /*alert(localStorage.getItem('user_name'));
               alert(localStorage.getItem('id_user'));
