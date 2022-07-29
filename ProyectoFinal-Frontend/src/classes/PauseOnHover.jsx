@@ -137,7 +137,7 @@ export default class PauseOnHover extends Component {
                   portada={info.service_photo}
                   perfil={info.service_photo}
                   nombre={info.author_name}
-                  cargo={info.type}
+                 // cargo={info.type}
                   desc={info.service_description}
                   precio={info.price}
                   key={info.author_id}

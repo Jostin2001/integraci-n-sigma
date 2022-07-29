@@ -66,12 +66,7 @@ function SectionCards(){
 
             </Container>
 
-            <section style={{ background: "#fff" }}>
-                <Container>
-                    <h2 className='gr-text text-center p-4'>Camaroncitos<hr /></h2>
-                    <CenterMode/>
-                </Container>
-            </section>
+           
         </div>
     )
 }
